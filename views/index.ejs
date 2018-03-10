@@ -1,0 +1,17 @@
+<html>
+  <head>
+  </head>
+
+  <body>
+    This page is not supported
+    <form action="/get/support" method="get">
+      <input name="thing" placeholder="thing that is not supported"></input>
+      <input type="radio" name="verb" value="is" checked>singular</input>
+      <input type="radio" name="verb" value="are">plural</input>
+      <input type="submit"></input>
+    </form>
+    <% if (supporturl) { %>
+      Support link: <a href="<%= supporturl %>"><%= supporturl %></a>
+    <% } %>
+  </body>
+</html>
