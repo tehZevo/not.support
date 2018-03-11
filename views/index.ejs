@@ -15,8 +15,10 @@
         <input type="checkbox" name="nsfw">nsfw</input>
       </div>
       <div>
+      <%= prefixes %>
         reason: <select name="reason">
           <option value="-1">random</option>
+          <!--
           <% for (var i = 0; i < prefixes.length; i++) { %>
             <%
               if (typeof prefixes[i] == 'string') {
@@ -27,7 +29,7 @@
               }
             %>
             <option value="<%= i %>"><%= pfix %></option>
-          <% } %>
+          <% } %>-->
         </select>
       </div>
     </form>
