@@ -17,6 +17,10 @@
       <div>
         reason: <select name="reason">
           <option value="-1">random</option>
+          <%
+            if (typeof(prefixes) == 'undefined')
+              var prefixes = ["&gt;FAILED TO LOAD PREFIXES&lt;"]
+          %>
           <% for (var i = 0; i < prefixes.length; i++) { %>
             <%
               if (typeof prefixes[i] == 'string') {
