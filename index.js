@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/get/support', (req, res) => {
-  var thing = req.query.thing.replace(/\s/g, '.');
+  var thing = req.query.thing.replace(/ /g, '.');
   var verb = req.query.verb;
   var host = (/[^.]+\.[^.]+$/.exec(req.hostname) || ["localhost"])[0];
   var query = [];
