@@ -31,15 +31,17 @@ app.get('/', (req, res) => {
     res.redirect('/ed');
     return;
   }
-  res.locals.supporturl = req.query.supporturl || "";
-  res.locals.prefixes = prefixes;
-  res.render('index');
+
+  res.render('index', {
+    supporturl: req.query.supporturl || "",
+    prefixes: prefixes
+  });
 });
 
 app.get('/get/support', (req, res) => {
   var thing = req.query.thing.replace(' ', '.');
   var verb = req.query.verb;
-  var host = /[^.]+\.[^.]+$/.exec(req.hostname)[0];
+  var host = (/[^.]+\.[^.]+$/.exec(req.hostname) || ["localhost"])[0];
   var query = [];
   if (req.query.nsfw) query.push('nsfw');
   if (req.query.reason != -1) query.push('reason=' + req.query.reason);
