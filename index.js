@@ -32,14 +32,19 @@ app.get('/', (req, res) => {
     return;
   }
   res.locals.supporturl = req.query.supporturl || "";
+  res.locals.prefixes = prefixes;
   res.render('index');
 });
 
 app.get('/get/support', (req, res) => {
-  var thing = req.query.thing;
+  var thing = req.query.thing.replace(' ', '.');
   var verb = req.query.verb;
   var host = /[^.]+\.[^.]+$/.exec(req.hostname)[0];
-  var supporturl = `${req.protocol}://${thing}.${verb}.${host}/ed`;
+  var query = [];
+  if (req.query.nsfw) query.push('nsfw');
+  if (req.query.reason != -1) query.push('reason=' + req.query.reason);
+  var querystr = query.join('&');
+  var supporturl = `${req.protocol}://${thing}.${verb}.${host}/ed?${querystr}`;
   res.redirect(`/?supporturl=` + encodeURIComponent(supporturl));
 });
 
@@ -74,8 +79,8 @@ app.get('/ed', (req, res) => {
   if (nsfw && Math.random() > 0.5) prefixdata = nsfwprefixes.random();
 
   // Optional prefix index override
-  if (typeof(req.query.id) != 'undefined') {
-    var newIndex = Math.max(Math.min(req.query.id, prefixes.length), 0);
+  if (typeof(req.query.reason) != 'undefined') {
+    var newIndex = Math.max(Math.min(req.query.reason, prefixes.length), 0);
     prefixdata = prefixes[newIndex] || prefixes.random();
   }
 
@@ -109,4 +114,4 @@ app.get('/ed', (req, res) => {
   res.locals.verb    = verb;
   res.render('support');
 });
-app.listen(8081);
+app.listen(80);
