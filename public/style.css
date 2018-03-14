@@ -52,8 +52,7 @@ input:focus, select:focus, textarea:focus, form:focus, button:focus {
       100% { background-position: 200px 0px; }
   }
 
-  .unsupported-stuff .thing:hover {
-    color: rgba(0,0,0,0);
+  .unsupported-stuff .thing {
     background: linear-gradient(
       to left,
       #FC3,
@@ -64,8 +63,12 @@ input:focus, select:focus, textarea:focus, form:focus, button:focus {
     background-size: 200px 200px;
     background-clip: text;
     -webkit-background-clip: text;
-    transition: 1s color;
     animation: 5s color-shift linear infinite;
+  }
+
+  .unsupported-stuff .thing:hover {
+    color: rgba(0,0,0,0);
+    transition: 1s color;
   }
 
   @keyframes fade-in {
