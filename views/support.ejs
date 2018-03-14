@@ -1,1 +1,18 @@
-<%= `${prefix} ${thing} ${postfix} ${verb} not supported` %>
+<html>
+  <head>
+    <link href="/style.css" type="text/css" rel="stylesheet"/>
+  <head>
+  <body>
+    <div class="unsupported-stuff">
+      <span class="prefix"   ><%=  prefix %></span>
+      <span class="thing"    ><%=  thing  %></span>
+      <span class="postfix"  ><%= postfix %></span>
+      <span class="verb"     ><%=   verb  %></span>
+      <span class="notsupported">
+        <span class="not"      >not</span>
+        <span class="supported">supported</span><!--
+   --></span><!--
+   --><span class="period">.</span>
+    </div>
+  </body>
+</html>

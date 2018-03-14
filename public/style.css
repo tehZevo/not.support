@@ -1,0 +1,99 @@
+body {
+    background-color: orange;
+}
+
+.unsupported-thing input:first-child, input#supporturl {
+    border: 2px solid red;
+    padding: 2px;
+}
+
+input#supporturl {
+  width: 300px;
+  background-color: #CCC;
+}
+
+.unsupported-stuff {
+    text-align: center;
+    display: block;
+    margin-top: 20px;
+    line-height: 24px;
+    font-family: monospace;
+    font-weight: bolder;
+}
+
+.mode-select {
+    font-family: fantasy;
+}
+
+.reasons select {
+    background-color: rgb(255, 125, 0);
+    border-radius: 5px;
+    border: none;
+}
+
+input:focus, select:focus, textarea:focus, form:focus, button:focus {
+    outline: 0;
+}
+
+.unsupported-stuff {
+    font-size: 125%;
+}
+
+.unsupported-stuff .thing {
+  color: rgba(0, 0, 0, 1);
+  font-size: 110%;
+  transition: 2s color;
+  /* text-shadow: 1px 1px 3px #FCC;  Here lies the free and open internet */
+}
+
+@supports (-webkit-background-clip: text) {
+  @keyframes color-shift {
+        0% { background-position:   0px 0px; }
+      100% { background-position: 200px 0px; }
+  }
+
+  .unsupported-stuff .thing:hover {
+    color: rgba(0,0,0,0);
+    background: linear-gradient(
+      to left,
+      #FC3,
+      #BAA,
+      blue,
+      red
+    );
+    background-size: 200px 200px;
+    background-clip: text;
+    -webkit-background-clip: text;
+    transition: 1s color;
+    animation: 5s color-shift linear infinite;
+  }
+
+  @keyframes fade-in {
+      0% { opacity: 0; }
+     90% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .unsupported-stuff .thing:hover::after {
+    content: "UniQMG was here";
+    position: absolute;
+
+    font-family: sans-serif;
+    transform: translateX(-50%)
+               translateY(100%)
+               skew(-20deg)
+               rotateY(40deg);
+
+    text-shadow: -10px 10px 5px red;
+    filter: blur(1.5px);
+
+    opacity: 1;
+    color: black;
+    animation: 10s fade-in linear;
+  }
+}
+
+.unsupported-stuff .not, .unsupported-stuff .supported {
+  color: #F00;
+  font-size: 110%;
+}

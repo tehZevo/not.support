@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 
 // Don't yell at me, please.
@@ -6,17 +7,19 @@ Array.prototype.random = function() {
   return this[Math.floor((Math.random()*this.length))];
 }
 
+app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
 // a b c d e f g h i j k l m n o p q r s t u v w x y z
 
-const verbs = [ "is", "are" ];
+const verbs = [ "is", "are", "she", "he", "they" ];
 // [ prefix, capitalize, postfix, conditional ]
 const prefixes = [
   ["", true],
   "Alert!",
   "As it turns out,",
   "CI/CD build failed:",
+  "Due to unforeseen consequences",
   "Oh no!",
   "Unfortunantly",
   "Weirdly, it would seem that",

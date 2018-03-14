@@ -1,20 +1,22 @@
 <html>
   <head>
+    <title>Not supported</title>
+    <link href="/style.css" rel="stylesheet" type="text/css" />
   </head>
 
   <body>
-    This page is not supported
-    <form action="/get/support" method="get">
-      <div>
+    <form class="unsupported-stuff" action="/get/support" method="get">
+      This page is not supported
+      <div class="unsupported-thing">
         <input name="thing" placeholder="thing that is not supported"></input>
         <input type="submit"></input>
       </div>
-      <div>
+      <div class="mode-select">
         <input type="radio" name="verb" value="is" checked>singular</input>
         <input type="radio" name="verb" value="are">plural</input>
         <input type="checkbox" name="nsfw">nsfw</input>
       </div>
-      <div>
+      <div class="reasons">
         reason: <select name="reason">
           <option value="-1">random</option>
           <%
@@ -34,21 +36,21 @@
           <% } %>
         </select>
       </div>
+      <% if (supporturl) { %>
+        <div class="supportlink">
+          Support link: <a href="<%= supporturl %>"><%= supporturl %></a>
+        </div>
+        <div class="supporturl">
+          <input id="supporturl" value="<%= supporturl %>" readonly></input>
+          <% /* <button onclick="copySupportURL()">copy</button> */ %>
+        </div>
+        <% /* <script type="text/javascript">
+          function copySupportURL() {
+            document.getElementById("supporturl").select();
+            document.execCommand("Copy");
+          }
+        </script> */ %>
+      <% } %>
     </form>
-    <% if (supporturl) { %>
-      <div>
-        Support link: <a href="<%= supporturl %>"><%= supporturl %></a>
-      </div>
-      <div>
-        <input id="supporturl" value="<%= supporturl %>" readonly></input>
-        <button onclick="copySupportURL()">copy</button>
-      </div>
-      <script type="text/javascript">
-        function copySupportURL() {
-          document.getElementById("supporturl").select();
-          document.execCommand("Copy");
-        }
-      </script>
-    <% } %>
   </body>
 </html>
