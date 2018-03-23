@@ -26,7 +26,7 @@ const prefixes = [
   [ "We can't run", false, "because", [ "it", "they" ] ]
 ];
 const nsfwprefixes = [
-  "Fuck!"
+  "wtf?"
 ];
 
 app.get('/', (req, res) => {
