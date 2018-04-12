@@ -17,8 +17,9 @@
         <input type="checkbox" name="nsfw">nsfw</input>
       </div>
       <div class="reasons">
-        reason: <select name="reason">
-          <option value="-1">random</option>
+        Reason:
+        <select name="reason">
+          <option value="-1">Random</option>
           <%
             if (typeof(prefixes) == 'undefined')
               var prefixes = ["&gt;FAILED TO LOAD PREFIXES&lt;"]
@@ -31,6 +32,14 @@
                 var pfix = prefixes[i].map(e => typeof(e) == 'string' ? e : "")
                 pfix = pfix.join(" ");
               }
+
+              if (!/\$custom/.test(pfix))
+                pfix += " is not supported."
+              pfix = pfix.replace(/\$singular:([^ ]+)/, '$1');
+              pfix = pfix.replace(/\$(content)/ig, 'thing');
+              pfix = pfix.replace(/\$[^ ]+/g, '');
+              if (pfix.length > 22)
+                pfix = pfix.substring(0, 22) + '...';
             %>
             <option value="<%= i %>"><%= pfix %></option>
           <% } %>
@@ -42,14 +51,14 @@
         </div>
         <div class="supporturl">
           <input id="supporturl" value="<%= supporturl %>" readonly></input>
-          <% /* <button onclick="copySupportURL()">copy</button> */ %>
+          <!-- <button onclick="copySupportURL()">copy</button>
+          <script type="text/javascript">
+            function copySupportURL() {
+              document.getElementById("supporturl").select();
+              document.execCommand("Copy");
+            }
+          </script> -->
         </div>
-        <% /* <script type="text/javascript">
-          function copySupportURL() {
-            document.getElementById("supporturl").select();
-            document.execCommand("Copy");
-          }
-        </script> */ %>
       <% } %>
     </form>
   </body>

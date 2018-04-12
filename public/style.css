@@ -23,6 +23,9 @@ input#supporturl {
 
 .mode-select {
     font-family: fantasy;
+    /* Left-unpads the radio button. Reeeeee OCD.*/
+    transform: translate(-3.5px);
+    font-weight: lighter;
 }
 
 .reasons select {

@@ -1,5 +1,7 @@
 const express = require('express');
 const path = require('path');
+const ejs = require('ejs');
+const fs = require('fs');
 const app = express();
 
 // Don't yell at me, please.
@@ -10,24 +12,23 @@ Array.prototype.random = function() {
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
-// a b c d e f g h i j k l m n o p q r s t u v w x y z
+const verbs = [ "is", "are" ];
+const plurality = [ false, true ];
+const prefixes = [];
+const nsfwprefixes = [];
 
-const verbs = [ "is", "are", "she", "he", "they" ];
-// [ prefix, capitalize, postfix, conditional ]
-const prefixes = [
-  ["", true],
-  "Alert!",
-  "As it turns out,",
-  "CI/CD build failed:",
-  "Due to unforeseen consequences",
-  "Oh no!",
-  "Unfortunantly",
-  "Weirdly, it would seem that",
-  [ "We can't run", false, "because", [ "it", "they" ] ]
-];
-const nsfwprefixes = [
-  "Fuck!"
-];
+fs.readFileSync('./prefixes', 'utf8').split(/\n/).forEach(line => {
+  line = line.split(/(?:[^\\]#)/)[0];
+  if (!line || line.startsWith('#') || line.trim().length == 0) return;
+
+  let nsfw = line.startsWith('!');
+  if (nsfw) {
+    nsfwprefixes.push(line.substring(1));
+  } else {
+    prefixes.push(line);
+  }
+  return line;
+});
 
 app.get('/', (req, res) => {
   if (req.subdomains.length > 0) {
@@ -50,6 +51,8 @@ app.get('/get/support', (req, res) => {
   if (req.query.reason != -1) query.push('reason=' + req.query.reason);
   var querystr = query.join('&');
   var supporturl = `${req.protocol}://${thing}.${verb}.${host}/ed?${querystr}`;
+  supporturl = supporturl.replace(/\.+/g, '.'); // Deduplicate periods
+  if (supporturl.length == 0) return res.redirect('/'); // :(
   res.redirect(`/?supporturl=` + encodeURIComponent(supporturl));
 });
 
@@ -67,6 +70,7 @@ app.get('/ed', (req, res) => {
     verbIndex = 0;
   }
   var verb = verbs[verbIndex];
+  var plural = plurality[verbIndex];
 
   // If 'things' is empty, redirect to the plain subdomain
   if (things.length == 0) {
@@ -77,11 +81,12 @@ app.get('/ed', (req, res) => {
 
   // Subdomains are implicitly in reverse order, which obv. isn't what we want.
   things = things.reverse();
+  var thing = things.join();
 
   // Choose a random prefix
   var prefixdata = prefixes.random();
   var nsfw = typeof(req.query.nsfw) != 'undefined';
-  if (nsfw && Math.random() > 0.5) prefixdata = nsfwprefixes.random();
+  if (nsfw) prefixdata = nsfwprefixes.random();
 
   // Optional prefix index override
   if (typeof(req.query.reason) != 'undefined') {
@@ -89,6 +94,47 @@ app.get('/ed', (req, res) => {
     prefixdata = prefixes[newIndex] || prefixes.random();
   }
 
+  var prefix = prefixdata;
+  var custom = false;
+
+  prefix = prefix.replace(/^(.+)\s?\$content/, (match, prefix) => {
+    return ejs.render(`<span class="prefix"><%= prefix %></span>` +
+                      `<span class="thing"><%= thing %></span>`, {
+      prefix: prefix,
+      thing: thing
+    });
+  }).replace(/\$custom\s?(.+)/, (match, text) => {
+    custom = true;
+    var textsplit = /^(.+?)([.,!?])?$/.exec(text);
+    return ejs.render(`<span class="not"><%= text %></span><%= punct %>`, {
+      text: textsplit[1],
+      punct: textsplit[2]
+    });
+  }).replace(/\$Content/, () => {
+    return ejs.render(`<span class="thing"><%= thing %></span>`, {
+      thing: thing[0].toUpperCase() + thing.substring(1)
+    });
+  }).replace(/\$CONTENT/, () => {
+    var THING = thing.toUpperCase();
+    return ejs.render(`<span class="thing"><%= thing %></span>`, {
+      thing: thing.toUpperCase()
+    });
+  })
+  .replace(/\$singular:([^ ]+)/g, (m, data) => plural ? '' : data)
+  .replace(/\plural:([^ ]+)/g, (m, data) => plural ? data : '');
+
+  if (!custom) {
+    prefix += ejs.render(`
+      <span class="notsupported">
+        <span class="not"      >not</span>
+        <span class="supported">supported</span><!--
+   --></span><!--
+   --><span class="period">.</span>
+    `);
+  }
+
+
+  /*
   // Check if the prefix forces capitalization
   if (typeof prefixdata == 'string') {
     var capitalize = /[.!?]$/.test(prefixdata);
@@ -108,15 +154,11 @@ app.get('/ed', (req, res) => {
   var capAction = capitalize ? 'toUpperCase' : 'toLowerCase'
   var slicedFirstThing = things[0].split("");
   slicedFirstThing[0] = slicedFirstThing[0][capAction]();
-  things[0] = slicedFirstThing.join("");
+  things[0] = slicedFirstThing.join(""); */
+
+
 
   // Serve up the text!
-  var thing = things.join(" ");
-
-  res.locals.prefix  = prefix;
-  res.locals.thing   = thing;
-  res.locals.postfix = postfix;
-  res.locals.verb    = verb;
-  res.render('support');
+  res.render('support', { thing: prefix });
 });
-app.listen(8081);
+app.listen(80);

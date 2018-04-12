@@ -1,0 +1,26 @@
+# PREFIXES! Add yours below, then send a PR if you want.
+# Keep them sorted in alphabetical order
+# (The order that JS Array.sort() would put them in)
+# Use '$content' to insert the unsupported content in lowercase
+# Use '$Content' to insert the unsupported content, First letter uppercase
+# Use '$CONTENT' to insert the unsupported content IN UPPERCASE
+# Note that because subdomains are case insensitive you cannot insert the original case.
+# Use '$singular:<content>' to specify optional text only for singular statements (@is.not.support)
+# Use '$plural:<content>' to specify optional text only for plural statements (@are.not.support)
+# CSS note: the 'postfix' class is applied to $singular and $plural content.
+# Use '$custom' anywhere in a line to suppress the default 'is not supported!' text.
+# Anything after $custom until the next period will have the 'verb' css class
+# Use '$class:<class>' to apply a custom CSS class
+# Use '$end' to end a class
+# All classes must be closed!
+# Prefix a line with ! to specify NSFW prefixes.
+
+!wtf, $content $custom machine broke.
+Alert! $Content
+As it turns out, $content
+CI/CD build failed: $content
+Due to unforeseen consequences $content
+Oh no! $Content
+Unfortunantly $content
+Weirdly, it would seem that $content
+We can't run $content because $singular:it $plural:they
