@@ -100,7 +100,7 @@ app.get('/ed', (req, res) => {
     prefixdata = prefixes[newIndex] || prefixes.random();
   }
 
-  if (true || !prefixdata) {
+  if (!prefixdata) {
     console.log(`Couldn't find a matching line for${nsfw ? ' nsfw' : ''} request "${thing}"`);
     res.redirect('/nolinefound');
     return;
