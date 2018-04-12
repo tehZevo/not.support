@@ -82,7 +82,7 @@ app.get('/ed', (req, res) => {
 
   // Subdomains are implicitly in reverse order, which obv. isn't what we want.
   things = things.reverse();
-  var thing = things.join();
+  var thing = things.join(" ");
 
   // Choose a random prefix
   var filter = function(line) {
