@@ -109,7 +109,9 @@ app.get('/ed', (req, res) => {
   var prefix = prefixdata;
   var custom = false;
 
-  prefix = prefix.replace(/^(.*)\s?\$content/, (match, prefix) => {
+  prefix = prefix.replace(/\$(singular|plural)only/g, () => {
+    return '';
+  }).trim().replace(/^(.*)\s?\$content/, (match, prefix) => {
     return ejs.render(`<span class="prefix"><%= prefix %></span>` +
                       `<span class="thing"><%= thing %></span>`, {
       prefix: prefix,
