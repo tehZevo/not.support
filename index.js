@@ -1,4 +1,6 @@
 const express = require('express');
+const striptags = require('striptags');
+const webshot = require('webshot');
 const path = require('path');
 const ejs = require('ejs');
 const fs = require('fs');
@@ -153,32 +155,17 @@ app.get('/ed', (req, res) => {
     `, { verb: verb });
   }
 
-
-  /*
-  // Check if the prefix forces capitalization
-  if (typeof prefixdata == 'string') {
-    var capitalize = /[.!?]$/.test(prefixdata);
-    var prefix = prefixdata;
-    var postfix = "";
-  } else {
-    var capitalize = prefixdata[1];
-    var postfix = prefixdata[2] || "";
-    var prefix = prefixdata[0];
-    var conditional = prefixdata[3];
-    if (conditional && conditional[verbIndex]) {
-      postfix += " " + conditional[verbIndex];
-    }
-  }
-
-  // Enforce capitalization.
-  var capAction = capitalize ? 'toUpperCase' : 'toLowerCase'
-  var slicedFirstThing = things[0].split("");
-  slicedFirstThing[0] = slicedFirstThing[0][capAction]();
-  things[0] = slicedFirstThing.join(""); */
-
-
-
   // Serve up the text!
-  res.render('support', { thing: prefix });
+  res.render('support', {
+    thing: prefix,
+    plaintext: striptags(prefix).replace(/\s+/g, ' ').trim()
+  });
+});
+app.get('/preview', (req, res) => {
+  var src = req.protocol + '://' + req.get('host');
+  res.set('Content-Type', 'image/png');
+  webshot(src, {
+    windowSize: { width: 640, height: 180 }
+  }).pipe(res);
 });
 app.listen(8081);
