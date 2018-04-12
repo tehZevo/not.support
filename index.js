@@ -52,7 +52,7 @@ app.get('/get/support', (req, res) => {
   var querystr = query.join('&');
   var supporturl = `${req.protocol}://${thing}.${verb}.${host}/ed?${querystr}`;
   supporturl = supporturl.replace(/\.+/g, '.'); // Deduplicate periods
-  supporturl = supporturl.replace(/[/]{2}./, '//'); // Leading period after ://
+  supporturl = supporturl.replace(/[/]{2}\./, '//'); // Leading period after ://
   if (supporturl.length == 0) return res.redirect('/'); // :(
   res.redirect(`/?supporturl=` + encodeURIComponent(supporturl));
 });
