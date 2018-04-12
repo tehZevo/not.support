@@ -9,6 +9,7 @@
 # Use '$plural:<content>' to specify optional text only for plural statements (@are.not.support)
 # CSS note: the 'postfix' class is applied to $singular and $plural content.
 # Use '$custom' anywhere in a line to suppress the default 'is not supported!' text.
+# Use '$singularonly' or '$pluralonly' to only allow a prefix in a certain plurality.
 # Anything after $custom until the next period will have the 'verb' css class
 # Use '$class:<class>' to apply a custom CSS class
 # Use '$end' to end a class
@@ -24,3 +25,4 @@ Oh no! $Content
 Unfortunantly $content
 Weirdly, it would seem that $content
 We can't run $content because $singular:it $plural:they
+$content machine broke. $singularonly

@@ -18,8 +18,8 @@ const prefixes = [];
 const nsfwprefixes = [];
 
 fs.readFileSync('./prefixes', 'utf8').split(/\n/).forEach(line => {
-  line = line.split(/(?:[^\\]#)/)[0];
-  if (!line || line.startsWith('#') || line.trim().length == 0) return;
+  line = (line.split(/(?:[^\\]#)/)[0] || "").trim()
+  if (line.length == 0 || line.startsWith('#')) return;
 
   let nsfw = line.startsWith('!');
   if (nsfw) {
@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
     prefixes: prefixes
   });
 });
-
+app.get('/nolinefound', (req, res) => res.render('nolinefound'));
 app.get('/get/support', (req, res) => {
   var thing = req.query.thing.replace(/ /g, '.');
   var verb = req.query.verb;
@@ -52,6 +52,7 @@ app.get('/get/support', (req, res) => {
   var querystr = query.join('&');
   var supporturl = `${req.protocol}://${thing}.${verb}.${host}/ed?${querystr}`;
   supporturl = supporturl.replace(/\.+/g, '.'); // Deduplicate periods
+  supporturl = supporturl.replace(/[/]{2}./, '//'); // Leading period after ://
   if (supporturl.length == 0) return res.redirect('/'); // :(
   res.redirect(`/?supporturl=` + encodeURIComponent(supporturl));
 });
@@ -84,14 +85,25 @@ app.get('/ed', (req, res) => {
   var thing = things.join();
 
   // Choose a random prefix
-  var prefixdata = prefixes.random();
+  var filter = function(line) {
+    if (/\$pluralonly/.test(line)) return plural;
+    if (/\$singularonly/.test(line)) return !plural;
+    return true;
+  }
+  var prefixdata = prefixes.filter(filter).random();
   var nsfw = typeof(req.query.nsfw) != 'undefined';
-  if (nsfw) prefixdata = nsfwprefixes.random();
+  if (nsfw) prefixdata = nsfwprefixes.filter(filter).random();
 
   // Optional prefix index override
   if (typeof(req.query.reason) != 'undefined') {
     var newIndex = Math.max(Math.min(req.query.reason, prefixes.length), 0);
     prefixdata = prefixes[newIndex] || prefixes.random();
+  }
+
+  if (true || !prefixdata) {
+    console.log(`Couldn't find a matching line for${nsfw ? ' nsfw' : ''} request "${thing}"`);
+    res.redirect('/nolinefound');
+    return;
   }
 
   var prefix = prefixdata;
@@ -121,16 +133,18 @@ app.get('/ed', (req, res) => {
     });
   })
   .replace(/\$singular:([^ ]+)/g, (m, data) => plural ? '' : data)
-  .replace(/\plural:([^ ]+)/g, (m, data) => plural ? data : '');
+  .replace(/\$plural:([^ ]+)/g, (m, data) => plural ? data : '')
+  .replace(/\$[^ ]+/, '');
 
   if (!custom) {
     prefix += ejs.render(`
+      <span class="prefix"><%= verb %></span>
       <span class="notsupported">
         <span class="not"      >not</span>
         <span class="supported">supported</span><!--
    --></span><!--
    --><span class="period">.</span>
-    `);
+    `, { verb: verb });
   }
 
 
