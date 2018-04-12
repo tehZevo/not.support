@@ -4,6 +4,7 @@
 # Use '$content' to insert the unsupported content in lowercase
 # Use '$Content' to insert the unsupported content, First letter uppercase
 # Use '$CONTENT' to insert the unsupported content IN UPPERCASE
+# Use '$cONTENT' to insert the unsupported content, fIRST LETTER UPPERCASE WITH CAPSLOCK ON
 # Note that because subdomains are case insensitive you cannot insert the original case.
 # Use '$singular:<content>' to specify optional text only for singular statements (@is.not.support)
 # Use '$plural:<content>' to specify optional text only for plural statements (@are.not.support)
@@ -25,4 +26,4 @@ Oh no! $Content
 Unfortunantly $content
 Weirdly, it would seem that $content
 We can't run $content because $singular:it $plural:they
-$content machine broke. $singularonly
+$content $custom machine broke. $singularonly

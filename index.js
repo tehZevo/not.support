@@ -109,7 +109,7 @@ app.get('/ed', (req, res) => {
   var prefix = prefixdata;
   var custom = false;
 
-  prefix = prefix.replace(/^(.+)\s?\$content/, (match, prefix) => {
+  prefix = prefix.replace(/^(.*)\s?\$content/, (match, prefix) => {
     return ejs.render(`<span class="prefix"><%= prefix %></span>` +
                       `<span class="thing"><%= thing %></span>`, {
       prefix: prefix,
@@ -126,6 +126,10 @@ app.get('/ed', (req, res) => {
     return ejs.render(`<span class="thing"><%= thing %></span>`, {
       thing: thing[0].toUpperCase() + thing.substring(1)
     });
+  }).replace(/\$cONTENT/, () => {
+    return ejs.render(`<span class="thing"><%= thing %></span>`, {
+      thing: thing[0].toLowerCase() + thing.substring(1).toUpperCase()
+    });
   }).replace(/\$CONTENT/, () => {
     var THING = thing.toUpperCase();
     return ejs.render(`<span class="thing"><%= thing %></span>`, {
@@ -134,7 +138,7 @@ app.get('/ed', (req, res) => {
   })
   .replace(/\$singular:([^ ]+)/g, (m, data) => plural ? '' : data)
   .replace(/\$plural:([^ ]+)/g, (m, data) => plural ? data : '')
-  .replace(/\$[^ ]+/, '');
+  .replace(/\$\S+/g, '');
 
   if (!custom) {
     prefix += ejs.render(`
