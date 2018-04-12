@@ -162,7 +162,8 @@ app.get('/ed', (req, res) => {
   });
 });
 app.get('/preview', (req, res) => {
-  var src = req.protocol + '://' + req.get('host');
+  var query = req.originalUrl.split('?').slice(1).join('');
+  var src = `${req.protocol}://${req.get('host')}/ed?${query}`;
   res.set('Content-Type', 'image/png');
   webshot(src, {
     windowSize: { width: 640, height: 180 }
