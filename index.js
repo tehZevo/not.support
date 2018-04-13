@@ -169,7 +169,18 @@ app.get('/preview', (req, res) => {
   var src = `${req.protocol}://${req.get('host')}/ed?${query}`;
   res.set('Content-Type', 'image/png');
   webshot(src, {
-    windowSize: { width: 640, height: 180 }
+    windowSize: { width: 640, height: 180 },
+    customCSS: `
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .unsupported-stuff {
+        line-height: 100vh;
+        margin: 0;
+      }
+    `
   }).pipe(res);
 });
 app.listen(8081);
