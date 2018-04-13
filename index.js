@@ -75,6 +75,8 @@ app.get('/ed', (req, res) => {
   var verb = verbs[verbIndex];
   var plural = plurality[verbIndex];
 
+  var query = req.originalUrl.split('?').slice(1).join('');
+
   // If 'things' is empty, redirect to the plain subdomain
   if (things.length == 0) {
     var host = /[^.]+\.[^.]+$/.exec(req.hostname)[0];
@@ -157,8 +159,9 @@ app.get('/ed', (req, res) => {
 
   // Serve up the text!
   res.render('support', {
+    plaintext: striptags(prefix).replace(/\s+/g, ' ').trim(),
     thing: prefix,
-    plaintext: striptags(prefix).replace(/\s+/g, ' ').trim()
+    query: query
   });
 });
 app.get('/preview', (req, res) => {
