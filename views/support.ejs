@@ -7,6 +7,19 @@
     <meta name="twitter:description" content="This page is not supported">
     <meta name="twitter:image" content="/preview?<%= query %>">
     <meta name="twitter:image:alt" content="<%= plaintext %>">
+    <% if (true) { %>
+      <style>
+        body {
+          margin: 0;
+          overflow: hidden;
+        }
+
+        .unsupported-stuff {
+          line-height: 100vh;
+          margin: 0;
+        }
+      </style>
+    <% } %>
   <head>
   <body>
     <div class="unsupported-stuff">

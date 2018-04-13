@@ -160,6 +160,7 @@ app.get('/ed', (req, res) => {
   // Serve up the text!
   res.render('support', {
     plaintext: striptags(prefix).replace(/\s+/g, ' ').trim(),
+    center: req.headers.center,
     thing: prefix,
     query: query
   });
@@ -170,17 +171,8 @@ app.get('/preview', (req, res) => {
   res.set('Content-Type', 'image/png');
   webshot(src, {
     windowSize: { width: 640, height: 180 },
-    customCSS: `
-      body {
-        margin: 0;
-        overflow: hidden;
-      }
-
-      .unsupported-stuff {
-        line-height: 100vh;
-        margin: 0;
-      }
-    `
+    customHeaders: { center: true },
+    siteType: 'url'
   }).pipe(res);
 });
 app.listen(8081);
